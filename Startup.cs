@@ -45,7 +45,7 @@ namespace QLLopHocTrucTuyen
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "QLLopHocTrucTuyen", Version = "v1" });
             });
-            
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -66,7 +66,16 @@ namespace QLLopHocTrucTuyen
                 };
             });
 
-
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:4000", "http://localhost:4000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
 
         }
 
@@ -79,7 +88,7 @@ namespace QLLopHocTrucTuyen
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "QLLopHocTrucTuyen v1"));
             }
-            
+
             app.UseSession();
 
             app.Use(async (context, next) =>
@@ -97,6 +106,14 @@ namespace QLLopHocTrucTuyen
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseEndpoints(endpoints =>
             {

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QLLopHocTrucTuyen.Controllers
 {
@@ -52,7 +53,7 @@ namespace QLLopHocTrucTuyen.Controllers
             return "Hello"; 
         }
 
-        [HttpGet("get_all")]
+        [HttpGet("All")]
         public IEnumerable<Account> GetAllAccount() {
             // this.HttpContext
             // this.Request
@@ -75,26 +76,9 @@ namespace QLLopHocTrucTuyen.Controllers
             return AccountRes.GetAll(); 
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public IActionResult Login(Account account) {
-            // this.HttpContext
-            // this.Request
-            // this.Response
-            // this.RouteData
-            // this.User
-            // this.ModelState
-            // this.ViewData
-            // this.ViewBag
-            // this.Url
-            // this.TempData
-            // var username = HttpUtility.HtmlEncode(update.Status);
-            // var password = HttpContext.Request.Query["password"];
-
-            // if (ModelState.IsValid && account != null)
-            // {
-            //     //
-            // }turn new BadRequestResult();
-            // }
+            _logger.LogInformation("Login");
 
             Account dbAccount = AccountRes.CheckAccount(account.Username, account.Password);
             string role = "";
@@ -127,8 +111,15 @@ namespace QLLopHocTrucTuyen.Controllers
             }
             else
             {
-                return BadRequest();
+                return Ok("Username or password is incorrect");
             }
+        }
+
+        [HttpGet("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return Ok("clear");
         }
 
         // public IActionResult Wibu() {
