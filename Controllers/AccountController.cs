@@ -53,29 +53,6 @@ namespace QLLopHocTrucTuyen.Controllers
             return "Hello"; 
         }
 
-        [HttpGet("All")]
-        public IEnumerable<Account> GetAllAccount() {
-            // this.HttpContext
-            // this.Request
-            // this.Response
-            // this.RouteData
-            // this.User
-            // this.ModelState
-            // this.ViewData
-            // this.ViewBag
-            // this.Url
-            // this.TempData
-            _logger.LogInformation("Index Action");
-            // Account account = new Account();
-            // account.FullName = "Linh";
-
-            // List<Account> lstResult = new List<Account>();
-
-            // lstResult.Add(account);
-
-            return AccountRes.GetAll(); 
-        }
-
         [HttpPost("Login")]
         public IActionResult Login(Account account) {
             _logger.LogInformation("Login");
@@ -122,69 +99,41 @@ namespace QLLopHocTrucTuyen.Controllers
             return Ok("clear");
         }
 
-        // public IActionResult Wibu() {
-        //     string filePath = Path.Combine(Startup.ContentRootPath, "Files", "wibu.jpg");
-        //     var bytes = System.IO.File.ReadAllBytes(filePath);
-
-        //     return File(bytes, "image/jpg");
-        // }
-
-        // public IActionResult JSONVALUE() {
-        //     return Json(
-        //         new {
-        //             a= 1,
-        //             b=2
-        //         }
-        //     );
-        // }
-
-        // public IActionResult Privacy ()
-        // {
-        //     var url = Url.Action("Privacy", "Home");
-        //     return LocalRedirect(url);
-        // }
-
-        // public IActionResult HelloView(string username) 
-        // {
-        //     if (string.IsNullOrEmpty(username))
-        //         username = "Guest";
-
-        //     return View("/Pages/Razor.cshtml", username);
-        // }
-
-        // [TempData]
-        // public string StatusMessage { get; set; }
-
-        // public IActionResult ViewProduct(int? id)
-        // {
-        //     // return View(product);
-
-        //     // this.ViewData["product"] = product;
+        [HttpGet("All")]
+        public IEnumerable<Account> GetAllAccount() {
+            return AccountRes.GetAll(); 
+        }
 
 
-        //     // return View("ViewProduct2");
-        //     return View("ViewProduct3");
+        [HttpPost("Create")]
+        // GET: AccountController/Create
+        public bool Create(Account acc)
+        {
+            _logger.LogInformation("Account Create");
+            bool Account = AccountRes.Insert(acc);
+
+            return Account;
+        }
+
+        [HttpPost("Update")]
+        // GET: AccountController/Create
+        public bool Update(Account acc)
+        {
+            _logger.LogInformation("Account Update");
+            bool Account = AccountRes.Update(acc);
+
+            return Account;
+        }
+
+        [HttpGet("Delete")]
+        // GET: AccountManagerController/Delete
+        public bool Delete(int id)
+        {
+            _logger.LogInformation("Account Delete");
+            bool Account = AccountRes.Delete(id);
             
-        //     // return Content($"ID = {id}");
-        // }
-
+            return Account;
+        }
 
     }
-
-        // Kiểu trả về                 | Phương thức
-        // ------------------------------------------------
-        // ContentResult               | Content()
-        // EmptyResult                 | new EmptyResult()
-        // FileResult                  | File()
-        // ForbidResult                | Forbid()
-        // JsonResult                  | Json()
-        // LocalRedirectResult         | LocalRedirect()
-        // RedirectResult              | Redirect()
-        // RedirectToActionResult      | RedirectToAction()
-        // RedirectToPageResult        | RedirectToRoute()
-        // RedirectToRouteResult       | RedirectToPage()
-        // PartialViewResult           | PartialView()
-        // ViewComponentResult         | ViewComponent()
-        // StatusCodeResult            | StatusCode()
-        // ViewResult                  | View()
 }

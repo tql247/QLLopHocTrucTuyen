@@ -29,8 +29,8 @@ namespace QLLopHocTrucTuyen.Repositories
                     Account.Username = dr["UserName"].ToString();
                     Account.Password = dr["PassWord"].ToString();
                     Account.RoleName = dr["RoleName"].ToString();
-                    Account.Age = string.IsNullOrEmpty(dr["Age"].ToString()) ? 0 : int.Parse(dr["Age"].ToString());
-                    Account.Gender = string.IsNullOrEmpty(dr["Gender"].ToString()) ? 0 : int.Parse(dr["Gender"].ToString());
+                    Account.Email = dr["Email"].ToString();
+                    Account.Phone = dr["Phone"].ToString();
                     Account.Address = dr["Address"].ToString();
 
                     lstResult.Add(Account);
@@ -53,13 +53,14 @@ namespace QLLopHocTrucTuyen.Repositories
             if (connection.errorCode == 0 && result.Rows.Count > 0)
             {
                 var dr = result.Rows[0];
+                
                 Account.ID = string.IsNullOrEmpty(dr["ID"].ToString()) ? 0 : int.Parse(dr["ID"].ToString());
                 Account.FullName = dr["FullName"].ToString();
                 Account.Username = dr["UserName"].ToString();
                 Account.Password = dr["PassWord"].ToString();
                 Account.RoleName = dr["RoleName"].ToString();
-                Account.Age = string.IsNullOrEmpty(dr["Age"].ToString()) ? 0 : int.Parse(dr["Age"].ToString());
-                Account.Gender = string.IsNullOrEmpty(dr["Gender"].ToString()) ? 0 : int.Parse(dr["Gender"].ToString());
+                Account.Email = dr["Email"].ToString();
+                Account.Phone = dr["Phone"].ToString();
                 Account.Address = dr["Address"].ToString();
 
                 if (Account.Password == password)
@@ -70,105 +71,63 @@ namespace QLLopHocTrucTuyen.Repositories
         }
 
 
-         
-        // public static bool Insert(Account Account)
-        // {
-        //     object[] value =
-        //     {
-        //         Account.FullName, 
-        //         Account.UserName, 
-        //         Account.PassWord, 
-        //         Account.RoleName,  
-        //         DateTime.Now
-        //     };
+        public static bool Insert(Account Account)
+        {
+            object[] value =
+            {
+                Account.Username, 
+                Account.Password, 
+                Account.FullName, 
+                Account.RoleName,  
+                Account.Email,  
+                Account.Phone,  
+                Account.Address,  
+            };
 
-        //     SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
-        //     DataTable result = connection.Select("Account_Insert ", value);
-        //     if (connection.errorCode == 0 && connection.errorMessage == "")
-        //         return true;
-        //     return false;
-        // }
+            Console.WriteLine(Account.Username);
 
-        // public static Account Detail(int id)
-        // {
-        //     object[] value =
-        //     {
-        //         id
-        //     };
+            SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
+            DataTable result = connection.Select("Account_Insert ", value);
+            if (connection.errorCode == 0 && connection.errorMessage == "")
+                return true;
+            return false;
+        }
 
-        //     SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
-        //     DataTable result = connection.Select("Account_Detail ", value);
-        //     Account Account = new Account();
+        public static bool Update(Account Account)
+        {
+            object[] value =
+            {
+                Account.ID, 
+                Account.Username, 
+                Account.Password, 
+                Account.FullName, 
+                Account.RoleName, 
+                Account.Email,
+                Account.Phone,
+                Account.Address,
+            };
 
-        //     if (connection.errorCode == 0 && result.Rows.Count > 0)
-        //     {
-        //         var dr = result.Rows[0];
-        //         Account.ID = string.IsNullOrEmpty(dr["ID"].ToString()) ? 0 : int.Parse(dr["ID"].ToString());
-        //         Account.FullName = dr["FullName"].ToString();
-        //         Account.UserName = dr["UserName"].ToString();
-        //         Account.PassWord = dr["PassWord"].ToString();
-        //         Account.RoleName = dr["RoleName"].ToString();
-        //         Account.CreatedDate = string.IsNullOrEmpty(dr["CreatedDate"].ToString()) ? default : DateTime.Parse(dr["CreatedDate"].ToString());
+            SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
+            DataTable result = connection.Select("Account_Update ", value);
+            if (connection.errorCode == 0 && connection.errorMessage == "")
+                return true;
 
-        //     }
-        //     return Account;
-        // }
+            Console.WriteLine(connection.errorMessage);
+            return false;
+        }
 
-        // public static bool Edit(Account Account)
-        // {
-        //     Console.WriteLine(Account.FullName);
-        //     object[] value =
-        //     {
-        //         Account.ID, Account.FullName, Account.UserName, Account.PassWord, Account.RoleName
-        //     };
+        public static bool Delete(int id)
+        {
+            object[] value =
+            {
+                id
+            };
 
-        //     SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
-        //     DataTable result = connection.Select("Account_Update ", value);
-        //     if (connection.errorCode == 0 && connection.errorMessage == "")
-        //         return true;
-        //     return false;
-        // }
-
-        // public static bool Delete(int id)
-        // {
-        //     object[] value =
-        //     {
-        //         id
-        //     };
-
-        //     SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
-        //     DataTable result = connection.Select("Account_Delete ", value);
-        //     if (connection.errorCode == 0 && connection.errorMessage == "")
-        //         return true;
-        //     return false;
-        // }
-
-        // public static Account CheckAccount(string username, string password)
-        // {
-        //     object[] value =
-        //     {
-        //         username
-        //     };
-
-        //     SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
-        //     DataTable result = connection.Select("Account_CheckLogin", value);
-        //     Account Account = new Account();
-
-        //     if (connection.errorCode == 0 && result.Rows.Count > 0)
-        //     {
-        //         var dr = result.Rows[0];
-        //         Account.ID = string.IsNullOrEmpty(dr["ID"].ToString()) ? 0 : int.Parse(dr["ID"].ToString());
-        //         Account.FullName = dr["FullName"].ToString();
-        //         Account.UserName = dr["UserName"].ToString();
-        //         Account.PassWord = dr["PassWord"].ToString();
-        //         Account.RoleName = dr["RoleName"].ToString();
-        //         Account.CreatedDate = string.IsNullOrEmpty(dr["CreatedDate"].ToString()) ? default : DateTime.Parse(dr["CreatedDate"].ToString());
-
-        //         if (Account.PassWord == password)
-        //             return Account;
-        //     }
-
-        //     return null;
-        // }
+            SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
+            DataTable result = connection.Select("Account_Delete ", value);
+            if (connection.errorCode == 0 && connection.errorMessage == "")
+                return true;
+            return false;
+        }
     }
 }
