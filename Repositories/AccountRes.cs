@@ -84,12 +84,14 @@ namespace QLLopHocTrucTuyen.Repositories
                 Account.Address,  
             };
 
-            Console.WriteLine(Account.Username);
-
             SQLCommand connection = new SQLCommand(ConstValue.ConnectionString);
             DataTable result = connection.Select("Account_Insert ", value);
             if (connection.errorCode == 0 && connection.errorMessage == "")
                 return true;
+
+
+            Console.WriteLine(connection.errorMessage);
+
             return false;
         }
 
