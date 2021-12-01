@@ -54,5 +54,26 @@ namespace QLLopHocTrucTuyen.Controllers
 
             return NotificationRes.GetAll(); 
         }
+
+
+        [HttpPost("Create")]
+        // GET: NotificationController/Create
+        public bool Create(Notification noti)
+        {
+            _logger.LogInformation("Notification Create");
+            bool Notification = NotificationRes.Insert(noti);
+
+            return Notification;
+        }
+
+        [HttpGet("Delete")]
+        // GET: NotificationManagerController/Delete
+        public bool Delete(int id)
+        {
+            _logger.LogInformation("Notification Create");
+            bool Notification = NotificationRes.Delete(id);
+            
+            return Notification;
+        }
     }
 }

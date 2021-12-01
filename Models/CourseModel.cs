@@ -9,17 +9,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace QLLopHocTrucTuyen.Models
 {
-    public class Notification
+    public class Course
     {
         public int ID {get; set; }
 
         [Required]
-        public string Title {get; set; }
+        public string Name {get; set; }
     
         [Required]
-        public string Content {get; set; }
-
-        public DateTime CreatedDate {get; set; }
-
+        public string Fee {get; set; }
+        public string Description {get; set; }
+        public string Teacher {get; set; }
     }
 }
