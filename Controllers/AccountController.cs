@@ -17,6 +17,10 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Net.Http.Headers;
 
 namespace QLLopHocTrucTuyen.Controllers
 {
@@ -37,41 +41,26 @@ namespace QLLopHocTrucTuyen.Controllers
 
         [HttpGet]
         public string Get() {
-            // this.HttpContext
-            // this.Request
-            // this.Response
-            // this.RouteData
-            // this.User
-            // this.ModelState
-            // this.ViewData
-            // this.ViewBag
-            // this.Url
-            // this.TempData
             _logger.LogInformation("Index Action");
-
-
             return "Hello"; 
         }
 
         [HttpPost("Login")]
         public IActionResult Login(Account account) {
             _logger.LogInformation("Login");
-
             Account dbAccount = AccountRes.CheckAccount(account.Username, account.Password);
-            string role = "";
-            if (dbAccount != null) {
-                _logger.LogInformation(dbAccount.RoleName);
-                role = dbAccount.RoleName;
-            }
 
-            if (account.Username == "admin" && account.Password == "123456")
-            {
+            if (dbAccount != null) {
+                _logger.LogInformation(dbAccount.Username);
+                _logger.LogInformation(dbAccount.RoleName);
+                _logger.LogInformation(dbAccount.FullName);
+
                 var claims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new Claim("RoleName", role),
+                    new Claim("RoleName", dbAccount.RoleName),
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -101,7 +90,24 @@ namespace QLLopHocTrucTuyen.Controllers
 
         [HttpGet("All")]
         public IEnumerable<Account> GetAllAccount() {
-            return AccountRes.GetAll(); 
+            
+            var JWToken = HttpContext.Session.GetString("JWToken");
+            Console.WriteLine(JWToken);
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                if (identity.FindFirst("RoleName") != null) {
+                    var role = identity.FindFirst("RoleName").Value;
+
+                    if (role == "admin") {
+                        return AccountRes.GetAll();
+                    }
+                }
+
+            }
+
+            return null; 
         }
 
 

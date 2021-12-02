@@ -105,6 +105,7 @@ namespace QLLopHocTrucTuyen
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors(builder =>
