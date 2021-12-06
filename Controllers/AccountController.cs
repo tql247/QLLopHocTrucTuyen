@@ -32,25 +32,28 @@ namespace QLLopHocTrucTuyen.Controllers
 
         public IConfiguration _configuration;
 
-        public AccountController(ILogger<AccountController> logger, IConfiguration config) 
-        {  
+        public AccountController(ILogger<AccountController> logger, IConfiguration config)
+        {
             _logger = logger;
             _configuration = config;
 
         }
 
         [HttpGet]
-        public string Get() {
+        public string Get()
+        {
             _logger.LogInformation("Index Action");
-            return "Hello"; 
+            return "Hello";
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(Account account) {
+        public IActionResult Login(Account account)
+        {
             _logger.LogInformation("Login");
             Account dbAccount = AccountRes.CheckAccount(account.Username, account.Password);
 
-            if (dbAccount != null) {
+            if (dbAccount != null)
+            {
                 _logger.LogInformation(dbAccount.Username);
                 _logger.LogInformation(dbAccount.RoleName);
                 _logger.LogInformation(dbAccount.FullName);
@@ -68,11 +71,11 @@ namespace QLLopHocTrucTuyen.Controllers
                 var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims,
                     expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
 
-                
+
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
                 HttpContext.Session.SetString("JWToken", tokenString);
-                
+
                 return Ok(tokenString);
             }
             else
@@ -89,25 +92,27 @@ namespace QLLopHocTrucTuyen.Controllers
         }
 
         [HttpGet("All")]
-        public IEnumerable<Account> GetAllAccount() {
-            
+        public IEnumerable<Account> GetAllAccount()
+        {
             var JWToken = HttpContext.Session.GetString("JWToken");
             Console.WriteLine(JWToken);
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                if (identity.FindFirst("RoleName") != null) {
+                if (identity.FindFirst("RoleName") != null)
+                {
                     var role = identity.FindFirst("RoleName").Value;
 
-                    if (role == "admin") {
+                    if (role == "admin")
+                    {
                         return AccountRes.GetAll();
                     }
                 }
 
             }
 
-            return null; 
+            return null;
         }
 
 
@@ -115,30 +120,84 @@ namespace QLLopHocTrucTuyen.Controllers
         // GET: AccountController/Create
         public bool Create(Account acc)
         {
-            _logger.LogInformation("Account Create");
-            bool Account = AccountRes.Insert(acc);
+            var JWToken = HttpContext.Session.GetString("JWToken");
+            Console.WriteLine(JWToken);
 
-            return Account;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                if (identity.FindFirst("RoleName") != null)
+                {
+                    var role = identity.FindFirst("RoleName").Value;
+
+                    if (role == "admin")
+                    {
+                        _logger.LogInformation("Account Create");
+                        bool Account = AccountRes.Insert(acc);
+
+                        return Account;
+                    }
+                }
+
+            }
+
+            return false;
         }
 
         [HttpPost("Update")]
         // GET: AccountController/Create
         public bool Update(Account acc)
         {
-            _logger.LogInformation("Account Update");
-            bool Account = AccountRes.Update(acc);
+            var JWToken = HttpContext.Session.GetString("JWToken");
+            Console.WriteLine(JWToken);
 
-            return Account;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                if (identity.FindFirst("RoleName") != null)
+                {
+                    var role = identity.FindFirst("RoleName").Value;
+
+                    if (role == "admin")
+                    {
+                        _logger.LogInformation("Account Update");
+                        bool Account = AccountRes.Update(acc);
+
+                        return Account;
+                    }
+                }
+
+            }
+
+            return false;
         }
 
         [HttpGet("Delete")]
         // GET: AccountManagerController/Delete
         public bool Delete(int id)
         {
-            _logger.LogInformation("Account Delete");
-            bool Account = AccountRes.Delete(id);
-            
-            return Account;
+            var JWToken = HttpContext.Session.GetString("JWToken");
+            Console.WriteLine(JWToken);
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                if (identity.FindFirst("RoleName") != null)
+                {
+                    var role = identity.FindFirst("RoleName").Value;
+
+                    if (role == "admin")
+                    {
+
+                        _logger.LogInformation("Account Delete");
+                        bool Account = AccountRes.Delete(id);
+
+                        return Account;
+                    }
+                }
+            }
+
+            return false;
         }
 
     }
